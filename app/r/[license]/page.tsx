@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase/admin";
 import ReviewWidget from "@/components/ReviewWidget";
 
 interface PageProps {
