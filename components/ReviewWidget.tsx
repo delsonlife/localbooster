@@ -23,23 +23,29 @@ export default function ReviewWidget({
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [redirecting, setRedirecting] = useState(false);
 
-  const handleSelect = async (rating: number) => {
-    setSelectedRating(rating);
+    const handleSelect = (rating: number) => {
+  setSelectedRating(rating);
 
-    // Enregistrement de la note (best-effort, ne bloque pas l'expérience)
-    fetch("/api/rating", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ license: licenseKey, rating }),
-    }).catch(() => {});
+  // Enregistrement de la note (best-effort, ne bloque pas l'expérience)
+  fetch("/api/rating", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ license: licenseKey, rating }),
+  }).catch(() => {});
 
+  // Petit délai pour laisser le temps aux étoiles de s'afficher en jaune
+  // avant la redirection (essentiel sur mobile : sans hover, le clic et
+  // la navigation arrivent en même temps et l'utilisateur ne voit jamais
+  // la couleur changer).
+  setTimeout(() => {
     if (rating >= 4) {
       setRedirecting(true);
       window.location.href = googleReviewUrl;
     } else {
       setStep("feedback");
     }
-  };
+  }, 300);
+};
 
   return (
     <main className="flex min-h-[100dvh] items-center justify-center bg-white px-6 py-10">
