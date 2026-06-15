@@ -60,7 +60,7 @@ export default function QRCodeCard({ licenseKey, reviewUrl }: QRCodeCardProps) {
       <p className="break-all text-center text-sm text-gray-400">{reviewUrl}</p>
 
       <div className="flex flex-wrap items-center justify-center gap-3">
-        
+        <a
           href={pngDownloadUrl}
           download
           className="rounded-xl bg-gray-900 px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
@@ -68,7 +68,7 @@ export default function QRCodeCard({ licenseKey, reviewUrl }: QRCodeCardProps) {
           PNG
         </a>
 
-        
+        <a
           href={svgDownloadUrl}
           download
           className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
