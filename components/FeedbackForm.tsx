@@ -46,6 +46,7 @@ export default function FeedbackForm({
   const [error, setError] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mobileFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -77,7 +78,6 @@ export default function FeedbackForm({
     }
     setSubmitting(true);
     setError("");
-
     try {
       const response = await fetch("/api/feedback", {
         method: "POST",
@@ -100,8 +100,8 @@ export default function FeedbackForm({
 
   const ringStyle = { "--tw-ring-color": primaryColor } as CSSProperties;
 
-  const Stars = () => (
-    <div className="flex gap-1">
+  const Stars = ({ large = false }: { large?: boolean }) => (
+    <div className="flex gap-1.5">
       {[1, 2, 3, 4, 5].map((v) => (
         <button
           key={v}
@@ -115,12 +115,8 @@ export default function FeedbackForm({
           <svg
             viewBox="0 0 24 24"
             fill="currentColor"
-            className={`${isMobile ? "h-10 w-10" : "h-9 w-9"} transition-colors duration-100 ${
-              v <= (hoveredStar || selectedRating)
-                ? "text-amber-400"
-                : isMobile
-                ? "text-gray-300"
-                : "text-gray-500"
+            className={`${large ? "h-11 w-11" : "h-9 w-9"} transition-colors duration-100 ${
+              v <= (hoveredStar || selectedRating) ? "text-amber-400" : "text-gray-300"
             }`}
           >
             <path d="M12 2.5l2.95 5.98 6.6.96-4.78 4.66 1.13 6.58L12 17.6l-5.9 3.08 1.13-6.58L2.45 9.44l6.6-.96L12 2.5z" />
@@ -130,81 +126,35 @@ export default function FeedbackForm({
     </div>
   );
 
-  const PhotoBlock = () => (
-    <div className="flex flex-col gap-3">
-      <button
-        type="button"
-        onClick={() => fileInputRef.current?.click()}
-        className={`flex w-full items-center justify-center gap-2 rounded-full border py-3 text-sm font-medium transition-colors ${
-          isMobile
-            ? "border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100"
-            : "border-gray-500 text-gray-300 hover:border-gray-300 hover:text-white"
-        }`}
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
-          <rect x="3" y="3" width="18" height="18" rx="3" />
-          <circle cx="8.5" cy="8.5" r="1.5" />
-          <polyline points="21 15 16 10 5 21" />
-        </svg>
-        Ajouter des photos et vidéos
-      </button>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleImageUpload}
-        className="hidden"
-      />
-      {imagePreviews.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {imagePreviews.map((src, idx) => (
-            <div key={idx} className="relative h-16 w-16 overflow-hidden rounded-xl bg-gray-200">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt="preview" className="h-full w-full object-cover" />
-              <button
-                type="button"
-                onClick={() => removeImage(idx)}
-                className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px] text-white"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
   // VERSION MOBILE
   if (isMobile) {
     return (
-      <div className="flex min-h-[100dvh] flex-col bg-white">
-        <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3">
-          <button type="button" onClick={onCancel} className="p-1 text-gray-500">
+      <div className="fixed inset-0 z-50 flex flex-col bg-white">
+        {/* Header : flèche + nom tronqué sur une ligne */}
+        <div className="flex flex-shrink-0 items-center gap-2 border-b border-gray-100 px-3 py-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex-shrink-0 rounded-full p-1.5 text-gray-500 active:bg-gray-100"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
               <path d="M19 12H5M12 5l-7 7 7 7" />
             </svg>
           </button>
-          <p className="text-base font-semibold text-gray-900">{companyName}</p>
+          <p className="min-w-0 flex-1 truncate text-sm font-semibold text-gray-900">
+            {companyName}
+          </p>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-6">
-          <div className="mb-5 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm font-semibold text-gray-600">
-              V
+        {/* Zone scrollable */}
+        <div className="flex-1 overflow-y-auto">
+          <form id="mobile-feedback-form" onSubmit={handleSubmit} className="flex flex-col gap-5 px-4 py-6">
+            {/* Étoiles centrées */}
+            <div className="flex justify-center">
+              <Stars large />
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-900">Votre avis</p>
-              <p className="text-xs text-gray-400">Post public sur Google ⓘ</p>
-            </div>
-          </div>
 
-          <div className="mb-5">
-            <Stars />
-          </div>
-
-          <form id="feedback-form" onSubmit={handleSubmit}>
+            {/* Textarea */}
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -212,53 +162,73 @@ export default function FeedbackForm({
               rows={5}
               maxLength={1000}
               style={ringStyle}
-              className="mb-4 w-full resize-none rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2"
+              className="w-full resize-none rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2"
             />
 
-            <div className="mb-5">
+            {/* Date de la visite */}
+            <div>
               <p className="mb-2 text-xs font-medium text-gray-500">Date de la visite</p>
               <div className="grid grid-cols-2 gap-3">
                 <div className="relative rounded-xl border border-gray-200 px-4 py-3">
-                  <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400">
-                    Mois
-                  </label>
+                  <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400">Mois</label>
                   <select
                     value={month}
                     onChange={(e) => setMonth(Number(e.target.value))}
                     className="w-full appearance-none bg-transparent text-sm text-gray-900 focus:outline-none"
                   >
-                    {MONTHS.map((m, i) => (
-                      <option key={m} value={i}>{m}</option>
-                    ))}
+                    {MONTHS.map((m, i) => <option key={m} value={i}>{m}</option>)}
                   </select>
                 </div>
                 <div className="relative rounded-xl border border-gray-200 px-4 py-3">
-                  <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400">
-                    Année
-                  </label>
+                  <label className="absolute -top-2 left-3 bg-white px-1 text-[10px] text-gray-400">Année</label>
                   <select
                     value={year}
                     onChange={(e) => setYear(Number(e.target.value))}
                     className="w-full appearance-none bg-transparent text-sm text-gray-900 focus:outline-none"
                   >
-                    {getYears().map((y) => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
+                    {getYears().map((y) => <option key={y} value={y}>{y}</option>)}
                   </select>
                 </div>
               </div>
             </div>
 
-            <PhotoBlock />
+            {/* Ajouter des photos */}
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() => mobileFileInputRef.current?.click()}
+                className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 py-3 text-sm font-medium text-gray-700 active:bg-gray-100"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                  <rect x="3" y="3" width="18" height="18" rx="3" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                Ajouter des photos
+              </button>
+              <input ref={mobileFileInputRef} type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
+              {imagePreviews.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {imagePreviews.map((src, idx) => (
+                    <div key={idx} className="relative h-16 w-16 overflow-hidden rounded-xl bg-gray-100">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={src} alt="preview" className="h-full w-full object-cover" />
+                      <button type="button" onClick={() => removeImage(idx)} className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px] text-white">✕</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
+            {error && <p className="text-sm text-red-500">{error}</p>}
           </form>
         </div>
 
-        <div className="border-t border-gray-100 bg-white px-4 pb-8 pt-3">
+        {/* Bouton Publier — toujours collé en bas, jamais poussé par le contenu */}
+        <div className="flex-shrink-0 border-t border-gray-100 bg-white px-4 pb-8 pt-3">
           <button
             type="submit"
-            form="feedback-form"
+            form="mobile-feedback-form"
             disabled={submitting}
             style={{ backgroundColor: primaryColor }}
             className="w-full rounded-full py-3.5 text-sm font-semibold text-white shadow-md transition-opacity disabled:opacity-60"
@@ -306,18 +276,37 @@ export default function FeedbackForm({
             className="mb-4 w-full resize-none rounded-xl border border-gray-600 bg-[#2a2a2a] px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:border-gray-400 focus:outline-none"
           />
 
-          <div className="mb-5">
-            <PhotoBlock />
+          <div className="mb-5 flex flex-col gap-3">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-gray-500 py-3 text-sm font-medium text-gray-300 transition-colors hover:border-gray-300 hover:text-white"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+              Ajouter des photos
+            </button>
+            <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
+            {imagePreviews.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {imagePreviews.map((src, idx) => (
+                  <div key={idx} className="relative h-16 w-16 overflow-hidden rounded-xl bg-gray-700">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt="preview" className="h-full w-full object-cover" />
+                    <button type="button" onClick={() => removeImage(idx)} className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-[10px] text-white">✕</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {error && <p className="mb-3 text-sm text-red-400">{error}</p>}
 
           <div className="flex items-center justify-end gap-3 border-t border-gray-700 pt-4">
-            <button
-              type="button"
-              onClick={onCancel}
-              className="rounded-full px-5 py-2 text-sm font-medium text-gray-300 hover:bg-white/10 transition-colors"
-            >
+            <button type="button" onClick={onCancel} className="rounded-full px-5 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-white/10">
               Annuler
             </button>
             <button
