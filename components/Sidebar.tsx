@@ -17,29 +17,29 @@ export default function Sidebar({ companyName }: { companyName: string }) {
 
   return (
     <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-[#eef2f8] bg-white md:flex">
-      <div className="flex flex-col h-full px-4 py-6">
+      <div className="flex h-full flex-col px-4 py-6">
         {/* Logo / Brand */}
         <div className="px-3 pb-6">
-          <p className="text-sm font-semibold text-[#0c1628] tracking-tight">
+          <p className="text-sm font-semibold tracking-tight text-[#0c1628]">
             LocalPlace<span className="text-[#1a56e8]">Maps</span>
           </p>
         </div>
 
         {/* Séparateur */}
-        <div className="border-t border-[#eef2f8] -mx-3" />
+        <div className="-mx-3 border-t border-[#eef2f8]" />
 
         {/* Nom de l'entreprise */}
         <div className="px-3 py-5">
           <p className="text-xs font-medium uppercase tracking-wider text-[#8d96a8]">
             Entreprise
           </p>
-          <p className="mt-1 text-sm font-semibold text-[#0c1628] truncate">
+          <p className="mt-1 truncate text-sm font-semibold text-[#0c1628]">
             {companyName}
           </p>
         </div>
 
         {/* Séparateur */}
-        <div className="border-t border-[#eef2f8] -mx-3" />
+        <div className="-mx-3 border-t border-[#eef2f8]" />
 
         {/* Navigation */}
         <nav className="mt-4 flex flex-1 flex-col gap-1">
@@ -59,7 +59,6 @@ export default function Sidebar({ companyName }: { companyName: string }) {
                   }
                 `}
               >
-                <span className="text-base">{link.icon}</span>
                 {link.label}
                 {isActive && (
                   <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#1a56e8]" />
@@ -70,16 +69,12 @@ export default function Sidebar({ companyName }: { companyName: string }) {
         </nav>
 
         {/* Footer sidebar */}
-        <div className="border-t border-[#eef2f8] -mx-3 pt-4 mt-2">
+        <div className="-mx-3 mt-2 border-t border-[#eef2f8] pt-4">
           <div className="px-3">
-            <p className="text-[11px] text-[#8d96a8]">
-              v1.0.0
-            </p>
+            <p className="text-[11px] text-[#8d96a8]">v1.0.0</p>
           </div>
         </div>
       </div>
     </aside>
   );
 }
-
-
