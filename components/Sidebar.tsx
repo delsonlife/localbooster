@@ -16,13 +16,33 @@ export default function Sidebar({ companyName }: { companyName: string }) {
   const pathname = usePathname();
 
   return (
-    <aside className="border-b border-gray-100 bg-white sm:w-60 sm:flex-shrink-0 sm:border-b-0 sm:border-r">
-      <div className="px-4 py-4 sm:px-4 sm:py-6">
-        <p className="mb-3 truncate text-sm font-semibold text-gray-900 sm:mb-8">
-          {companyName}
-        </p>
+    <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-[#eef2f8] bg-white md:flex">
+      <div className="flex flex-col h-full px-4 py-6">
+        {/* Logo / Brand */}
+        <div className="px-3 pb-6">
+          <p className="text-sm font-semibold text-[#0c1628] tracking-tight">
+            LocalPlace<span className="text-[#1a56e8]">Maps</span>
+          </p>
+        </div>
 
-        <nav className="flex gap-1 overflow-x-auto pb-1 sm:flex-col sm:overflow-visible sm:pb-0">
+        {/* Séparateur */}
+        <div className="border-t border-[#eef2f8] -mx-3" />
+
+        {/* Nom de l'entreprise */}
+        <div className="px-3 py-5">
+          <p className="text-xs font-medium uppercase tracking-wider text-[#8d96a8]">
+            Entreprise
+          </p>
+          <p className="mt-1 text-sm font-semibold text-[#0c1628] truncate">
+            {companyName}
+          </p>
+        </div>
+
+        {/* Séparateur */}
+        <div className="border-t border-[#eef2f8] -mx-3" />
+
+        {/* Navigation */}
+        <nav className="mt-4 flex flex-1 flex-col gap-1">
           {links.map((link) => {
             const isActive = pathname === link.href;
 
@@ -30,18 +50,36 @@ export default function Sidebar({ companyName }: { companyName: string }) {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`whitespace-nowrap rounded-xl px-3 py-2 text-sm transition-colors ${
-                  isActive
-                    ? "bg-gray-100 font-medium text-gray-900"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                }`}
+                className={`
+                  flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200
+                  ${
+                    isActive
+                      ? "bg-[#f0f4f9] text-[#0c1628]"
+                      : "text-[#5a6478] hover:bg-[#f6f8fa] hover:text-[#0c1628]"
+                  }
+                `}
               >
+                <span className="text-base">{link.icon}</span>
                 {link.label}
+                {isActive && (
+                  <span className="ml-auto h-1.5 w-1.5 rounded-full bg-[#1a56e8]" />
+                )}
               </Link>
             );
           })}
         </nav>
+
+        {/* Footer sidebar */}
+        <div className="border-t border-[#eef2f8] -mx-3 pt-4 mt-2">
+          <div className="px-3">
+            <p className="text-[11px] text-[#8d96a8]">
+              v1.0.0
+            </p>
+          </div>
+        </div>
       </div>
     </aside>
   );
 }
+
+
