@@ -17,16 +17,30 @@ export default async function DashboardHomePage() {
   const stats = computeStats(ratings ?? []);
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold text-gray-900">Tableau de bord</h1>
+    <div className="flex flex-col gap-8 md:gap-10">
+      {/* En-tête avec titre et sous-titre */}
+      <div className="space-y-2">
+        <h1 className="text-2xl md:text-3xl font-semibold text-[#0c1628] tracking-tight">
+          Tableau de bord
+        </h1>
+        <p className="text-sm md:text-base text-[#5a6478]">
+          Suivez vos avis clients et votre réputation locale en temps réel.
+        </p>
+      </div>
 
-      <DashboardStats
-        total={stats.total}
-        average={stats.average}
-        negative={stats.negative}
-      />
+      {/* Statistiques */}
+      <div>
+        <DashboardStats
+          total={stats.total}
+          average={stats.average}
+          negative={stats.negative}
+        />
+      </div>
 
-      <RatingChart data={stats.monthly} primaryColor={profile.license.primary_color} />
+      {/* Graphique */}
+      <div>
+        <RatingChart data={stats.monthly} primaryColor={profile.license.primary_color} />
+      </div>
     </div>
   );
 }
