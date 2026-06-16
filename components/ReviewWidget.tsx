@@ -23,69 +23,80 @@ export default function ReviewWidget({
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [redirecting, setRedirecting] = useState(false);
 
-    const handleSelect = (rating: number) => {
-  setSelectedRating(rating);
+  const handleSelect = (rating: number) => {
+    setSelectedRating(rating);
 
-  // Enregistrement de la note (best-effort, ne bloque pas l'expérience)
-  fetch("/api/rating", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ license: licenseKey, rating }),
-  }).catch(() => {});
+    fetch("/api/rating", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ license: licenseKey, rating }),
+    }).catch(() => {});
 
-  // Petit délai pour laisser le temps aux étoiles de s'afficher en jaune
-  // avant la redirection (essentiel sur mobile : sans hover, le clic et
-  // la navigation arrivent en même temps et l'utilisateur ne voit jamais
-  // la couleur changer).
-  setTimeout(() => {
-    if (rating >= 4) {
-      setRedirecting(true);
-      window.location.href = googleReviewUrl;
-    } else {
-      setStep("feedback");
-    }
-  }, 300);
-};
+    setTimeout(() => {
+      if (rating >= 4) {
+        setRedirecting(true);
+        window.location.href = googleReviewUrl;
+      } else {
+        setStep("feedback");
+      }
+    }, 300);
+  };
 
-  return (
-    <main className="flex min-h-[100dvh] items-center justify-center bg-white px-6 py-10">
-      <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-soft ring-1 ring-gray-100">
-        {step === "rating" && (
+  if (step === "rating") {
+    return (
+      <main className="flex min-h-[100dvh] items-center justify-center bg-white px-6 py-10">
+        <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-soft ring-1 ring-gray-100">
           <div className="flex flex-col items-center gap-7 text-center">
             <div className="flex flex-col gap-1">
-              <p className="text-lg font-semibold text-gray-900">
-                Votre avis compte
-              </p>
+              <p className="text-lg font-semibold text-gray-900">Votre avis compte</p>
               {companyName && (
                 <p className="text-sm text-gray-400">{companyName}</p>
               )}
             </div>
-
             <StarRating onSelect={handleSelect} disabled={redirecting} />
-
             {redirecting && (
               <p className="text-xs text-gray-400">Redirection...</p>
             )}
           </div>
-        )}
+        </div>
+      </main>
+    );
+  }
 
-        {step === "feedback" && selectedRating !== null && (
-          <FeedbackForm
-            licenseKey={licenseKey}
-            rating={selectedRating}
-            primaryColor={primaryColor}
-            onSubmitted={() => setStep("thanks")}
-          />
-        )}
-
-        {step === "thanks" && (
-          <div className="flex flex-col items-center gap-2 py-6 text-center">
-            <p className="text-lg font-semibold text-gray-900">Merci</p>
-            <p className="text-sm text-gray-400">
-              Votre retour a bien été transmis.
-            </p>
+  if (step === "feedback" && selectedRating !== null) {
+    return (
+      <>
+        {/* Arrière-plan visible sur PC derrière le popup */}
+        <main className="flex min-h-[100dvh] items-center justify-center bg-white px-6 py-10">
+          <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-soft ring-1 ring-gray-100">
+            <div className="flex flex-col items-center gap-7 text-center">
+              <p className="text-lg font-semibold text-gray-900">Votre avis compte</p>
+              {companyName && (
+                <p className="text-sm text-gray-400">{companyName}</p>
+              )}
+            </div>
           </div>
-        )}
+        </main>
+
+        <FeedbackForm
+          licenseKey={licenseKey}
+          rating={selectedRating}
+          primaryColor={primaryColor}
+          companyName={companyName}
+          onSubmitted={() => setStep("thanks")}
+          onCancel={() => setStep("rating")}
+        />
+      </>
+    );
+  }
+
+  return (
+    <main className="flex min-h-[100dvh] items-center justify-center bg-white px-6 py-10">
+      <div className="w-full max-w-sm rounded-3xl bg-white p-8 shadow-soft ring-1 ring-gray-100">
+        <div className="flex flex-col items-center gap-2 py-6 text-center">
+          <p className="text-lg font-semibold text-gray-900">Merci</p>
+          <p className="text-sm text-gray-400">Votre retour a bien été transmis.</p>
+        </div>
       </div>
     </main>
   );
