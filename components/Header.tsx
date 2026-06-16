@@ -4,7 +4,13 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 
-export default function Header({ email }: { email: string | null }) {
+export default function Header({ 
+  email, 
+  companyName 
+}: { 
+  email: string | null;
+  companyName: string;
+}) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -30,13 +36,13 @@ export default function Header({ email }: { email: string | null }) {
 
           {/* Right side: User menu */}
           <div className="flex items-center gap-3 ml-auto">
-            {/* User avatar + email (visible desktop) */}
+            {/* User avatar + company name (visible desktop) */}
             <div className="hidden items-center gap-3 sm:flex">
               <div className="h-8 w-8 rounded-full bg-[#f0f4f9] flex items-center justify-center text-xs font-medium text-[#5a6478] ring-1 ring-[#eef2f8]">
-                {email?.charAt(0).toUpperCase() || "?"}
+                {companyName?.charAt(0).toUpperCase() || "?"}
               </div>
-              <span className="text-sm text-[#5a6478]">
-                {email}
+              <span className="text-sm font-medium text-[#0c1628]">
+                {companyName}
               </span>
             </div>
 
@@ -66,12 +72,15 @@ export default function Header({ email }: { email: string | null }) {
         {isOpen && (
           <div className="absolute right-6 mt-3 w-56 rounded-2xl border border-[#eef2f8] bg-white shadow-lg shadow-[#0c1628]/5 md:right-10">
             <div className="p-2">
-              {/* Email affiché dans le dropdown */}
+              {/* Entreprise + Email dans le dropdown */}
               <div className="px-3 py-2 border-b border-[#eef2f8]">
                 <p className="text-xs font-medium uppercase tracking-wider text-[#8d96a8]">
                   Connecté en tant que
                 </p>
-                <p className="mt-1 text-sm font-medium text-[#0c1628] truncate">
+                <p className="mt-1 text-sm font-semibold text-[#0c1628] truncate">
+                  {companyName}
+                </p>
+                <p className="mt-0.5 text-xs text-[#8d96a8] truncate">
                   {email}
                 </p>
               </div>
