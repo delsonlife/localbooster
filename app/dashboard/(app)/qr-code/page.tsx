@@ -8,9 +8,11 @@ import EmailSignatureCard from "@/components/EmailSignatureCard";
 export default async function QrCodePage() {
   const profile = await getDashboardProfile();
 
-  const headersList = await headers();
+  const headersList = headers();
   const host = headersList.get("host") ?? "";
-  const protocol = host.startsWith("localhost") ? "http" : "https";
+
+  const protocol = host.includes("localhost") ? "http" : "https";
+
   const reviewUrl = `${protocol}://${host}/r/${profile.license.license_key}`;
   const pngQrUrl = `/api/qr?key=${profile.license.license_key}&format=png`;
 
@@ -26,7 +28,10 @@ export default async function QrCodePage() {
         </p>
       </div>
 
-      <QRCodeCard licenseKey={profile.license.license_key} reviewUrl={reviewUrl} />
+      <QRCodeCard
+        licenseKey={profile.license.license_key}
+        reviewUrl={reviewUrl}
+      />
 
       <A5PosterCard
         licenseKey={profile.license.license_key}
@@ -45,7 +50,7 @@ export default async function QrCodePage() {
       <EmailSignatureCard
         companyName={profile.license.company_name}
         primaryColor={profile.license.primary_color}
-        reviewLink={reviewUrl}  // ← Changé de reviewUrl à reviewLink
+        reviewLink={reviewUrl}
       />
     </div>
   );
