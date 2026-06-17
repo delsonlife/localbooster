@@ -27,22 +27,34 @@ export default async function QrCodePage() {
         pngQrUrl={pngQrUrl}
       />
 
-      
-
+      {/* BusinessCardCard temporairement retiré */}
+      {/* 
       <BusinessCardCard
         licenseKey={profile.license.license_key}
         companyName={profile.license.company_name}
         primaryColor={profile.license.primary_color}
         pngQrUrl={pngQrUrl}
       />
+      */}
 
-      
-
+      {/* EmailSignatureCard temporairement retiré */}
+      {/*
       <EmailSignatureCard
         companyName={profile.license.company_name}
         primaryColor={profile.license.primary_color}
         reviewUrl={reviewUrl}
       />
+      */}
+
+      {/* Message informatif (optionnel) */}
+      <div className="rounded-xl border border-[#eef2f8] bg-[#fafcff] p-4 text-center">
+        <p className="text-sm text-[#5a6478]">
+          🔧 Supports supplémentaires disponibles prochainement.
+        </p>
+        <p className="text-xs text-[#8d96a8] mt-1">
+          (Carte de visite et signature email)
+        </p>
+      </div>
     </div>
   );
 }
