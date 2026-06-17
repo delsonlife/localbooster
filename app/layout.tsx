@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-icons: {
-    icon: '/favicon.svg',
-  },
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,7 +10,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Votre avis compte",
   description: "Donnez votre avis en quelques secondes",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
+
 
 export const viewport: Viewport = {
   width: "device-width",
