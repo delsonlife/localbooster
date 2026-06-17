@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+icons: {
+    icon: '/favicon.svg',
+  },
 
 const inter = Inter({
   subsets: ["latin"],
