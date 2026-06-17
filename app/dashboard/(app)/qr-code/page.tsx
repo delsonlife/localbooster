@@ -15,8 +15,16 @@ export default async function QrCodePage() {
   const pngQrUrl = `/api/qr?key=${profile.license.license_key}&format=png`;
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold text-gray-900">QR Code &amp; supports marketing</h1>
+    <div className="flex flex-col gap-8 md:gap-10">
+      {/* En-tête */}
+      <div className="space-y-2">
+        <h1 className="text-2xl font-semibold tracking-tight text-[#0c1628] md:text-3xl">
+          QR Code &amp; supports marketing
+        </h1>
+        <p className="text-sm text-[#5a6478] md:text-base">
+          Téléchargez vos supports pour collecter des avis facilement.
+        </p>
+      </div>
 
       <QRCodeCard licenseKey={profile.license.license_key} reviewUrl={reviewUrl} />
 
@@ -37,7 +45,7 @@ export default async function QrCodePage() {
       <EmailSignatureCard
         companyName={profile.license.company_name}
         primaryColor={profile.license.primary_color}
-        reviewUrl={reviewUrl}
+        reviewLink={reviewUrl}  // ← Changé de reviewUrl à reviewLink
       />
     </div>
   );
