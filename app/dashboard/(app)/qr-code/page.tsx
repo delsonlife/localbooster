@@ -27,8 +27,7 @@ export default async function QrCodePage() {
         pngQrUrl={pngQrUrl}
       />
 
-       {/* BusinessCardCard temporairement retiré */}
-      {/* 
+      
 
       <BusinessCardCard
         licenseKey={profile.license.license_key}
@@ -37,8 +36,7 @@ export default async function QrCodePage() {
         pngQrUrl={pngQrUrl}
       />
 
-      {/* EmailSignatureCard temporairement retiré */}
-      {/*
+      
 
       <EmailSignatureCard
         companyName={profile.license.company_name}
