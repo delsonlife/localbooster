@@ -1,5 +1,3 @@
-corrige ici :
-
 import { headers } from "next/headers";
 import { getDashboardProfile } from "@/lib/auth";
 import QRCodeCard from "@/components/QRCodeCard";
