@@ -2,7 +2,8 @@ import { headers } from "next/headers";
 import { getDashboardProfile } from "@/lib/auth";
 import QRCodeCard from "@/components/QRCodeCard";
 import A5PosterCard from "@/components/A5PosterCard";
-
+// import BusinessCardCard from "@/components/BusinessCardCard"; ← TEMPORAIREMENT COMMENTÉ
+// import EmailSignatureCard from "@/components/EmailSignatureCard"; ← TEMPORAIREMENT COMMENTÉ
 
 export default async function QrCodePage() {
   const profile = await getDashboardProfile();
