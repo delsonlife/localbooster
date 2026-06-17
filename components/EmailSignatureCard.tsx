@@ -101,7 +101,7 @@ export default function EmailSignatureCard({
                             <tbody>
                               <tr>
                                 <td style={{ backgroundColor: primaryColor, borderRadius: 20, padding: "8px 16px" }}>
-                                  
+                                  <a
                                     href={reviewUrl}
                                     style={{
                                       color: "#ffffff",
